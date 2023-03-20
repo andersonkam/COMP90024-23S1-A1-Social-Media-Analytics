@@ -307,6 +307,8 @@ def main():
         # top_ten_df.to_csv("./output/top_ten.csv")
         # author_city_counts_df.to_csv("./output/cauthor_city_counts.csv")
         
+        pd.set_option('display.max_columns', None)
+        
         print(city_tweets_df)
         print("\n", "*"*80, "\n")
         print(top_ten_df)
