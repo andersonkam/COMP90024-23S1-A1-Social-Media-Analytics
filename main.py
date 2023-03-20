@@ -111,7 +111,6 @@ def get_author_city_counts(sal_data, twitter_data):
             if full_name in sal_city_match.keys():
                 greater_city = sal_city_match[sub_name]
                 author_id = tweet['data']["author_id"]
-                print(tweet['70245478'])
             else:            
                 sal_name = get_sal_name(full_name)
 
