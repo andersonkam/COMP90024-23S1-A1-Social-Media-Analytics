@@ -253,7 +253,7 @@ def main():
         twitter_data = sys.argv[2]
         
     # sal_data = 'sal.json'
-    # twitter_data = 'twitter-data-small.json'
+    # twitter_data = 'tinyTwitter.json'
     
     with open(sal_data) as f:
         sal_data = json.load(f)

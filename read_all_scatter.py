@@ -220,7 +220,7 @@ if __name__=="__main__":
         twitter_data = sys.argv[2]
 
     # sal_data='sal.json'
-    # twitter_data='twitter-data-small.json'
+    # twitter_data='tinyTwitter.json'
     
     # Open the JSON file
     if rank == 0:
