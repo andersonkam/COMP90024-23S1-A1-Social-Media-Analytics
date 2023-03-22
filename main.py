@@ -198,7 +198,7 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
     top_ten_df.index += 1
     
     # Sort the dict by the unique number of cities
-    author_city_counts = sorted(author_city_counts.items(), key=lambda x: len(x[1]), reverse=True)[:10]
+    author_city_counts = sorted(author_city_counts.items(), key=lambda x: (len(x[1]), sum(x[1].values())), reverse=True)[:10]
     rows = []
 
     for i, (author_id, city_tweet_counts) in enumerate(author_city_counts):
