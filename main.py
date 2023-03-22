@@ -3,14 +3,16 @@ import ijson
 import re
 import sys
 import time
+from pprint import pprint
 from collections import defaultdict
-from itertools import islice
 from mpi4py import MPI
 
 import pandas as pd
 import cProfile
 
-BUFFER_SIZE = 1000
+STATE_DICT = {'new south wales': 'nsw', 'queensland': 'qld', 'south australia': 'sa', 
+              'tasmania': 'tas', 'victoria': 'vic', 'western australia': 'wa', 
+              'australian capital territory': 'act', 'northern territory': 'nt'}
 
 '''
 This function is used to get the list of capital cities required
@@ -27,117 +29,130 @@ def get_capital_cities(sal_data):
     return capital_city_lst
 
 '''
-This function is used to get the match between the sal and the capital city
+This function is used to get the sal and gcc dict
 '''
-def get_sal_city_match(sal_data):
-    sal_city_match = {}
-    capital_cities = get_capital_cities(sal_data)
-
-    for region in sal_data.keys():
-        gcc = sal_data[region]["gcc"]
-
-        if gcc in capital_cities:
-            sal_city_match[region] = gcc
-
-    return sal_city_match
-
-'''
-This function is used to get a list of subname of the full name of the location
-'''
-def get_sal_name(full_name):
-    sal_names = full_name.split(",")[0:]  # split by comma and take the first part
-    sal_names = [name.strip().lower() for name in sal_names]
+def get_sal_gcc_dict(sal_data):
+    sal_gcc_dict = {}
     
-    if len(sal_names) > 1:
-        sub_names = []
-        for name in sal_names[1:]:
-            sal_names.extend(re.split(r"\W+", name))
-        sal_names.extend([name for name in sub_names if name])
-        
-    return sal_names
+    for region in sal_data:
+        if re.search('\d+(.*)', sal_data[region].get("gcc")).group(1)[0] != 'r' and \
+                sal_data[region].get("gcc")[0] != '9':
+            if re.findall("\((.*?)\)", region):
+                region_name = re.findall(r'(.*?)\(.*?\)', region)
+                region_name = region_name[0].strip(" ")
+                region_loc = re.findall("\((.*?)\)", region)
+                if " - " in region_loc[0]:
+                    region_loc = region_loc[0].split(" - ")
+                    sal_gcc_dict[region_name, region_loc[0], 
+                                region_loc[1].replace(".", "")] = sal_data[region].get("gcc")
+                    sal_gcc_dict[region_loc[0], 
+                                region_loc[1].replace(".", "")] = sal_data[region].get("gcc")
+                    sal_gcc_dict[region_name, 
+                                region_loc[1].replace(".", "")] = sal_data[region].get("gcc")
+                else:
+                    region_loc = region_loc[0].replace(".", "")
+                    sal_gcc_dict[region_name, region_loc] = sal_data[region].get("gcc")
+            else:
+                sal_gcc_dict[region] = sal_data[region].get("gcc")
+                
+    return sal_gcc_dict
+
+'''
+This function is used to get the list of keys for the sal dictionary
+'''
+def generate_tweet_sal_keys(full_name):
+    keys = []
+    if full_name[-1] in STATE_DICT.keys():
+        for i in range(len(full_name) - 1):
+            keys.append(full_name[i])
+            keys.append((full_name[i], STATE_DICT[full_name[-1]]))
+    else:
+        for i in range(len(full_name)):
+            keys.append(full_name[i])
+    return keys
+
+'''
+This function is used to split the full name of the location
+'''
+def split_full_name(full_name):
+    split_names = []
+    tmp_split_names = []
+    names = full_name.lower().split(",")
+    names = [name.strip(" ") for name in names]
+    for name in names:
+        if " - " in name:
+            for split_name in name.split(" - "):
+                tmp_split_names.append(split_name)
+        else:
+            tmp_split_names.append(name)
+            
+    for name in tmp_split_names:
+        if "(" in name:
+            name_outside = re.findall(r'(.*?)\(.*?\)', name)[0]
+            name_inside = re.findall("\((.*?)\)", name)[0]
+            split_names.append(name_outside.strip(" "))
+            split_names.append(name_inside.strip("."))
+        else:
+            split_names.append(name)
+            
+    return split_names
 
 '''
 This function is used to get the number of tweets in each capital city
 '''
-def get_city_tweet_counts(sal_data, twitter_data):
-    capital_city_lst = get_capital_cities(sal_data)
-    sal_city_match = get_sal_city_match(sal_data)
+def get_city_tweet_counts(sal_gcc_dict, tweet, city_tweet_counts):
+    full_name = tweet["includes"]["places"][0]["full_name"]
+    split_names = split_full_name(full_name)
+    tweet_sal_keys = generate_tweet_sal_keys(split_names)
+    
+    # Ordering the sal keys by tuple with more detailed sal information first, string after
+    sorted_tweet_sal_keys = sorted(tweet_sal_keys, key=lambda x: isinstance(x, tuple) != True)
 
-    city_tweet_counts = {city: 0 for city in capital_city_lst}
-
-    for tweet in twitter_data:
-        if tweet["includes"] and "places" in tweet["includes"]:
-            full_name = tweet["includes"]["places"][0]["full_name"]
-            
-            if full_name in sal_city_match.keys():
-                greater_city = sal_city_match[sub_name]
-                author_id = tweet['data']["author_id"]
-            else:  
-                sal_name = get_sal_name(full_name)
-
-                for sub_name in sal_name:
-                    if sub_name in sal_city_match.keys():
-                        greater_city = sal_city_match[sub_name]
-                        city_tweet_counts[greater_city] += 1
-                        break
-
-    return city_tweet_counts
+    # Check if the tweet location is in the sal_gcc dictionary;
+    # If so, count the number of tweets in each capital city
+    for tweet_sal_key in sorted_tweet_sal_keys:
+        if tweet_sal_key in sal_gcc_dict.keys():
+            if sal_gcc_dict[tweet_sal_key] in city_tweet_counts.keys():
+                city_tweet_counts[sal_gcc_dict[tweet_sal_key]] += 1
+            else:
+                city_tweet_counts[sal_gcc_dict[tweet_sal_key]] = 1
+            break
 
 '''
 This function is used to get the number of tweets made by each author
 '''
-def get_author_tweet_counts(twitter_data):
-    author_tweet_counts = {}
-    for tweet in twitter_data:
-        author_id = tweet['data']["author_id"]
-        if author_id in author_tweet_counts:
-            author_tweet_counts[author_id] += 1
-        else:
-            author_tweet_counts[author_id] = 1
-
+def get_author_tweet_counts(tweet, author_tweet_counts):
+    author_id = tweet['data']["author_id"]
+    if author_id in author_tweet_counts:
+        author_tweet_counts[author_id] += 1
+    else:
+        author_tweet_counts[author_id] = 1
     return author_tweet_counts
-
+        
 '''
 This function is used to get the number of tweets made by each author in each capital city
 '''
-def get_author_city_counts(sal_data, twitter_data):
-    author_city_counts = {}
-    sal_city_match = get_sal_city_match(sal_data)
-
-    for tweet in twitter_data:
-        if tweet["includes"] and "places" in tweet["includes"]:
-            full_name = tweet["includes"]["places"][0]["full_name"]
-            
-            if full_name in sal_city_match.keys():
-                greater_city = sal_city_match[sub_name]
-                author_id = tweet['data']["author_id"]
-            else:            
-                sal_name = get_sal_name(full_name)
-
-                for sub_name in sal_name:
-                    if sub_name in sal_city_match.keys():
-                        greater_city = sal_city_match[sub_name]
-                        author_id = tweet['data']["author_id"]
-                        if author_id in author_city_counts:
-                            if greater_city in author_city_counts[author_id]:
-                                author_city_counts[author_id][greater_city] += 1
-                            else:
-                                author_city_counts[author_id][greater_city] = 1
-                        else:
-                            author_city_counts[author_id] = {greater_city: 1}
-                        break 
-                
-    return author_city_counts
+def get_author_city_counts(sal_gcc_dict, tweet, author_city_counts):
     
-'''
-This function is used to process the data into desired format
-'''
-def data_process(sal_data, twitter_data):
-    city_tweet_counts = get_city_tweet_counts(sal_data, twitter_data)
-    author_tweet_counts = get_author_tweet_counts(twitter_data)
-    author_city_counts = get_author_city_counts(sal_data, twitter_data)
-    
-    return city_tweet_counts, author_tweet_counts, author_city_counts
+    author_id = tweet['data']["author_id"]
+    full_name = tweet["includes"]["places"][0]["full_name"]
+    split_names = split_full_name(full_name)
+    tweet_sal_keys = generate_tweet_sal_keys(split_names)
+
+    # Ordering the sal keys by tuple with more detailed sal information first, string after
+    sorted_tweet_sal_keys = sorted(tweet_sal_keys, key=lambda x: isinstance(x, tuple) != True)
+
+    for tweet_sal_key in sorted_tweet_sal_keys:
+        if tweet_sal_key in sal_gcc_dict.keys():
+            greater_city = sal_gcc_dict[tweet_sal_key]
+            if author_id in author_city_counts:
+                if greater_city in author_city_counts[author_id]:
+                    author_city_counts[author_id][greater_city] += 1
+                else:
+                    author_city_counts[author_id][greater_city] = 1
+            else:
+                author_city_counts[author_id] = {greater_city: 1}
+            break 
 
 '''
 This function is used to process the gathered data and
@@ -181,11 +196,6 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
         top_ten, columns=["Author Id", "Number of Tweets Made"]
     ).rename_axis("Rank")
     top_ten_df.index += 1
-        
-    # # Random data to make a different sample for testing
-    # author_city_counts['940868397528698880']['2gmel'] = 5
-    # author_city_counts['940868397528698880']['3gbri'] = 2
-    # author_city_counts['7050962']['3gbri'] = 10
     
     # Sort the dict by the unique number of cities
     author_city_counts = sorted(author_city_counts.items(), key=lambda x: len(x[1]), reverse=True)[:10]
@@ -206,36 +216,6 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
     
     return city_tweets_df, top_ten_df, author_city_counts_df
 
-'''
-This function is used to update the sub results from new buffer results
-'''
-def update_sub_results(sub_city_tweet_counts, sub_author_tweet_counts, sub_author_city_counts, \
-                        buffer_city_tweet_counts, buffer_author_tweet_counts, buffer_author_city_counts):
-    # Update city tweet counts
-    for city, count in buffer_city_tweet_counts.items():
-        if city in sub_city_tweet_counts:
-            sub_city_tweet_counts[city] += count
-        else:
-            sub_city_tweet_counts[city] = count
-
-    # Update author tweet counts
-    for author, count in buffer_author_tweet_counts.items():
-        if author in sub_author_tweet_counts:
-            sub_author_tweet_counts[author] += count
-        else:
-            sub_author_tweet_counts[author] = count
-
-    # Update author city counts
-    for author, city_count in buffer_author_city_counts.items():
-        if author in sub_author_city_counts:
-            for city, count in city_count.items():
-                if city in sub_author_city_counts[author]:
-                    sub_author_city_counts[author][city] += count
-                else:
-                    sub_author_city_counts[author][city] = count
-        else:
-            sub_author_city_counts[author] = city_count
-
 def main():
     comm = MPI.COMM_WORLD
     size = comm.Get_size()
@@ -253,53 +233,36 @@ def main():
     if rank == 0:
         start = time.time()
         print("Reading data...")
-
-    with open(sal_data) as f:
-        sal_data = json.load(f)
     
-    sub_city_tweet_counts = defaultdict(int)
+    capital_city_lst = []
+    sal_gcc_dict = {}
+    with open(sal_data, 'r', encoding='utf-8') as f:
+        sal_data = json.load(f)
+        capital_city_lst = get_capital_cities(sal_data)
+        sal_gcc_dict = get_sal_gcc_dict(sal_data)
+
+    sub_city_tweet_counts = {city: 0 for city in capital_city_lst}
     sub_author_tweet_counts = {}
     sub_author_city_counts = {}
-    
-    tweet_buffer = []
     with open(twitter_data, 'rb') as f:
         parser = ijson.parse(f)
         
         count = 0
         for chunk in ijson.items(parser, 'item'):
-            # Only process the data if the current process is the one that should process it
-            if count // BUFFER_SIZE % size == rank:
+            if count % size == rank:
                 tweet = {'data': chunk['data'], 'includes': chunk['includes']} # keep only wanted data
-                                
-                tweet_buffer.append(tweet)
-                if len(tweet_buffer) == BUFFER_SIZE:
-                    
-                    # Process the data for the current buffer
-                    buffer_city_tweet_counts, buffer_author_tweet_counts, \
-                                    buffer_author_city_counts = data_process(sal_data, tweet_buffer)
-                    
-                    # Update the sub results
-                    update_sub_results(sub_city_tweet_counts, sub_author_tweet_counts, sub_author_city_counts, \
-                            buffer_city_tweet_counts, buffer_author_tweet_counts, buffer_author_city_counts)
-
-                    # Clear the buffer
-                    tweet_buffer = []
+                
+                get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
+                get_author_tweet_counts(tweet, sub_author_tweet_counts)
+                get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
             count += 1
-
-        # Process remaining data in buffer in process 0 or send to other processes
-        if tweet_buffer:            
-            buffer_city_tweet_counts, buffer_author_tweet_counts, \
-                            buffer_author_city_counts = data_process(sal_data, tweet_buffer)
-            
-            # Update the sub results
-            update_sub_results(sub_city_tweet_counts, sub_author_tweet_counts, sub_author_city_counts, \
-                    buffer_city_tweet_counts, buffer_author_tweet_counts, buffer_author_city_counts)
-    
+        
     # Gather the sub-results
     city_tweet_counts_gather = comm.gather(sub_city_tweet_counts, root=0)
     author_tweet_counts_gather = comm.gather(sub_author_tweet_counts, root=0)
     author_city_counts_gather = comm.gather(sub_author_city_counts, root=0)
-
+    
+    
     if rank == 0:
         city_tweets_df, top_ten_df, author_city_counts_df = output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather)
         
@@ -318,5 +281,5 @@ def main():
         print("Process 0: Finished in {:.2f} seconds".format(time.time() - start))
 
 if __name__=="__main__": 
-    # cProfile.run("main()", sort="cumtime")
     main()
+    # cProfile.run("main()", sort="cumtime")
