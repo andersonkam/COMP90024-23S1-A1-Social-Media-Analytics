@@ -3,90 +3,90 @@ New python executable in /home/doncd/venvs/venv-3.7.4/bin/python
 Installing setuptools, pip, wheel...
 done.
 Requirement already satisfied: pandas in ./venvs/venv-3.7.4/lib/python3.7/site-packages (1.3.5)
-Requirement already satisfied: pytz>=2017.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2022.7.1)
-Requirement already satisfied: python-dateutil>=2.7.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2.8.2)
 Requirement already satisfied: numpy>=1.17.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (1.21.6)
+Requirement already satisfied: python-dateutil>=2.7.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2.8.2)
+Requirement already satisfied: pytz>=2017.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2022.7.1)
 Requirement already satisfied: six>=1.5 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from python-dateutil>=2.7.3->pandas) (1.16.0)
 Requirement already satisfied: ijson in ./venvs/venv-3.7.4/lib/python3.7/site-packages (3.2.0.post0)
 Reading data...
                       Number of Tweets Made
 Greater Capital City                       
-1gsyd                               2220892
-2gmel                               2287625
-3gbri                                860299
-4gade                                466521
-5gper                                589771
-6ghob                                 90891
-7gdar                                 46390
-8acte                                202655
-9oter                                     0
+1gsyd                               1549121
+2gmel                               1594405
+3gbri                                600648
+4gade                                323930
+5gper                                413018
+6ghob                                 58247
+7gdar                                 31407
+8acte                                141492
+9oter                                   127
 
  ******************************************************************************** 
 
                 Author Id  Number of Tweets Made
 Rank                                            
-1     1498063511204761601                  68477
-2     1089023364973219840                  28128
-3      826332877457481728                  27718
-4     1250331934242123776                  25350
-5     1423662808311287813                  21034
-6     1183144981252280322                  20765
-7     1270672820792508417                  20503
-8      820431428835885059                  20063
-9      778785859030003712                  19403
-10    1104295492433764353                  18781
+1     1498063511204761601                  29108
+2      826332877457481728                  19717
+3     1089023364973219840                  18956
+4     1250331934242123776                  18099
+5               233782487                  14669
+6     1423662808311287813                  14593
+7     1270672820792508417                  14432
+8      820431428835885059                  14372
+9     1104295492433764353                  14330
+10     778785859030003712                  14263
 
  ******************************************************************************** 
 
                 Author Id  Number of Unique City Locations  \
 Rank                                                         
-1      702290904460169216                                8   
-2              1361519083                                8   
+1     1429984556451389440                                9   
+2      702290904460169216                                8   
 3                17285408                                8   
-4      921197448885886977                                8   
-5      774694926135222272                                8   
-6               502381727                                8   
-7                87188071                                8   
-8     1429984556451389440                                8   
-9              2647302752                                8   
-10              322866759                                8   
+4                87188071                                8   
+5               340123805                                8   
+6      774694926135222272                                8   
+7              1361519083                                8   
+8               502381727                                8   
+9      921197448885886977                                8   
+10              601712763                                8   
 
                                                 #Tweets  
 Rank                                                     
-1     #1226 tweets - 128gade, 338gsyd, 234gbri, 43gh...  
-2     #266 tweets - 193gdar, 36gmel, 18gsyd, 2ghob, ...  
-3     #1209 tweets - 1061gsyd, 40gbri, 23acte, 11gho...  
-4     #208 tweets - 49gsyd, 58gmel, 24gade, 37gbri, ...  
-5     #272 tweets - 37gbri, 36ghob, 37gsyd, 38gmel, ...  
-6     #250 tweets - 214gmel, 8gbri, 8ghob, 4gade, 10...  
-7     #402 tweets - 86gmel, 15ghob, 116gsyd, 65gbri,...  
-8     #1921 tweets - 1880gmel, 7gper, 13acte, 11gsyd...  
-9     #80 tweets - 32gbri, 3gade, 13gsyd, 4gper, 16g...  
-10    #45 tweets - 31acte, 4gmel, 1gade, 4gsyd, 1gda...  
-Process 0: Finished in 555.52 seconds
+1     #1338 tweets - 1303gmel, 4gper, 16acte, 6gsyd,...  
+2     #890 tweets - 166gbri, 104gade, 234gsyd, 111gp...  
+3     #835 tweets - 727gsyd, 29gbri, 18acte, 8ghob, ...  
+4     #276 tweets - 32gper, 11ghob, 60gmel, 82gsyd, ...  
+5     #238 tweets - 215gsyd, 12gper, 1gade, 6gmel, 1...  
+6     #201 tweets - 30gbri, 21gade, 22gper, 19gdar, ...  
+7     #184 tweets - 26gmel, 133gdar, 13gsyd, 5gade, ...  
+8     #170 tweets - 142gmel, 7acte, 5gbri, 7ghob, 2g...  
+9     #149 tweets - 14gade, 45gmel, 38gsyd, 26gbri, ...  
+10    #94 tweets - 24gmel, 32gsyd, 4ghob, 7gbri, 1gd...  
+Process 0: Finished in 474.14 seconds
 
-real	9m17.073s
-user	73m11.360s
-sys	0m41.923s
-Job ID           : 45707852
+real	7m55.802s
+user	62m5.797s
+sys	0m47.953s
+Job ID           : 45880446
 Cluster          : spartan
 User/Project     : doncd/comp90024
 Nodes            : 1
-Wall-clock time  : 00:09:37 / 01:00:00
+Wall-clock time  : 00:08:19 / 01:00:00
 
-Displaying overall resources usage from 2023-03-22 12:02:30 to 2023-03-22 12:12:07:
+Displaying overall resources usage from 2023-03-28 16:44:46 to 2023-03-28 16:53:05:
 
 NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
 
-spartan-bm092 : 
-                CPU# 1    : 96.8   (  95.9 /   0.9 /   0.0 /   3.2 ) 
-                CPU# 2    : 96.9   (  95.9 /   0.9 /   0.0 /   3.1 ) 
-                CPU# 3    : 96.8   (  95.9 /   1.0 /   0.0 /   3.1 ) 
-                CPU# 4    : 97.6   (  96.5 /   1.1 /   0.1 /   2.3 ) 
-                CPU# 5    : 96.9   (  95.9 /   0.9 /   0.0 /   3.1 ) 
-                CPU# 6    : 96.8   (  95.7 /   1.1 /   0.0 /   3.1 ) 
-                CPU# 7    : 96.8   (  95.9 /   1.0 /   0.0 /   3.2 ) 
-                CPU# 8    : 97.6   (  96.5 /   1.1 /   0.0 /   2.4 ) 
+spartan-bm087 : 
+                CPU# 1    : 94.8   (  93.3 /   1.6 /   0.1 /   5.0 ) 
+                CPU# 2    : 94.9   (  93.5 /   1.4 /   0.1 /   5.0 ) 
+                CPU# 3    : 95.9   (  94.3 /   1.5 /   0.1 /   4.0 ) 
+                CPU# 4    : 94.6   (  93.2 /   1.4 /   0.0 /   5.3 ) 
+                CPU# 5    : 94.8   (  93.4 /   1.3 /   0.1 /   5.2 ) 
+                CPU# 6    : 95.0   (  93.7 /   1.3 /   0.1 /   4.9 ) 
+                CPU# 7    : 94.8   (  93.4 /   1.4 /   0.1 /   5.1 ) 
+                CPU# 8    : 94.6   (  93.1 /   1.4 /   0.1 /   5.4 ) 
 
 
 Allocated CPUs            : 8    
@@ -94,7 +94,7 @@ Allocated CPUs            : 8
   CPUs with usage <50%    : 0    
   CPUs with usage >50%    : 8    
 
-Memory used (RAM)         : 4.2%  [1335MB of 32000MB]
+Memory used (RAM)         : 4.1%  [1325MB of 32000MB]
 
 --------------------------------------------
 

@@ -19,7 +19,7 @@ Greater Capital City
 6ghob                                 90891
 7gdar                                 46390
 8acte                                202655
-9oter                                     0
+9oter                                   182
 
  ******************************************************************************** 
 
@@ -40,46 +40,46 @@ Rank
 
                 Author Id  Number of Unique City Locations  \
 Rank                                                         
-1      702290904460169216                                8   
-2               502381727                                8   
-3              1361519083                                8   
-4      921197448885886977                                8   
-5                87188071                                8   
-6      774694926135222272                                8   
-7                17285408                                8   
-8               322866759                                8   
-9     1429984556451389440                                8   
+1     1429984556451389440                                8   
+2      702290904460169216                                8   
+3                17285408                                8   
+4                87188071                                8   
+5      774694926135222272                                8   
+6              1361519083                                8   
+7               502381727                                8   
+8      921197448885886977                                8   
+9               601712763                                8   
 10             2647302752                                8   
 
                                                 #Tweets  
 Rank                                                     
-1     #1226 tweets - 263gmel, 128gade, 46acte, 234gb...  
-2     #250 tweets - 214gmel, 8gbri, 8ghob, 3gper, 4g...  
-3     #266 tweets - 36gmel, 193gdar, 18gsyd, 9gade, ...  
-4     #208 tweets - 37gbri, 24gade, 28gper, 49gsyd, ...  
-5     #402 tweets - 29gade, 65gbri, 52gper, 116gsyd,...  
-6     #272 tweets - 37gbri, 28gade, 28gdar, 34acte, ...  
-7     #1209 tweets - 1061gsyd, 40gbri, 23acte, 60gme...  
-8     #45 tweets - 31acte, 4gsyd, 1gper, 4gmel, 1gad...  
-9     #1921 tweets - 1880gmel, 2gade, 13acte, 7gper,...  
+1     #1921 tweets - 1880gmel, 2gade, 13acte, 7gper,...  
+2     #1226 tweets - 263gmel, 128gade, 46acte, 234gb...  
+3     #1209 tweets - 1061gsyd, 40gbri, 23acte, 60gme...  
+4     #402 tweets - 29gade, 65gbri, 52gper, 116gsyd,...  
+5     #272 tweets - 37gbri, 28gade, 28gdar, 34acte, ...  
+6     #266 tweets - 36gmel, 193gdar, 18gsyd, 9gade, ...  
+7     #250 tweets - 214gmel, 8gbri, 8ghob, 3gper, 4g...  
+8     #208 tweets - 37gbri, 24gade, 28gper, 49gsyd, ...  
+9     #146 tweets - 44gsyd, 10acte, 39gmel, 1gdar, 1...  
 10    #80 tweets - 32gbri, 3gdar, 3gade, 4gper, 4act...  
-Process 0: Finished in 639.67 seconds
+Process 0: Finished in 614.01 seconds
 
-real	10m42.811s
-user	10m32.813s
-sys	0m5.754s
-Job ID           : 45707848
+real	10m17.982s
+user	10m6.844s
+sys	0m5.839s
+Job ID           : 45880440
 Cluster          : spartan
 User/Project     : doncd/comp90024
 Nodes            : 1
-Wall-clock time  : 00:11:06 / 01:00:00
+Wall-clock time  : 00:10:42 / 01:00:00
 
-Displaying overall resources usage from 2023-03-22 11:50:51 to 2023-03-22 12:01:57:
+Displaying overall resources usage from 2023-03-28 16:23:45 to 2023-03-28 16:34:27:
 
 NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
 
-spartan-bm006 : 
-                CPU# 1    : 98.5   (  97.5 /   1.1 /   0.1 /   1.3 ) 
+spartan-bm008 : 
+                CPU# 1    : 98.7   (  97.5 /   1.2 /   0.2 /   1.1 ) 
 
 
 Allocated CPUs            : 1    
@@ -87,7 +87,7 @@ Allocated CPUs            : 1
   CPUs with usage <50%    : 0    
   CPUs with usage >50%    : 1    
 
-Memory used (RAM)         : 5.2%  [210MB of 4000MB]
+Memory used (RAM)         : 5.2%  [209MB of 4000MB]
 
 --------------------------------------------
 
