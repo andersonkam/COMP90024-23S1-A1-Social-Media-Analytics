@@ -35,8 +35,7 @@ def get_sal_gcc_dict(sal_data):
     sal_gcc_dict = {}
     
     for region in sal_data:
-        if re.search('\d+(.*)', sal_data[region].get("gcc")).group(1)[0] != 'r' and \
-                sal_data[region].get("gcc")[0] != '9':
+        if re.search('\d+(.*)', sal_data[region].get("gcc")).group(1)[0] != 'r':
             if re.findall("\((.*?)\)", region):
                 region_name = re.findall(r'(.*?)\(.*?\)', region)
                 region_name = region_name[0].strip(" ")
