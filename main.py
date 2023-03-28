@@ -100,7 +100,7 @@ def split_full_name(full_name):
 This function is used to get the number of tweets in each capital city
 '''
 def get_city_tweet_counts(sal_gcc_dict, tweet, city_tweet_counts):
-    full_name = tweet["includes"]["places"][0]["full_name"]
+    full_name = tweet["full_name"]
     split_names = split_full_name(full_name)
     tweet_sal_keys = generate_tweet_sal_keys(split_names)
     
@@ -121,7 +121,7 @@ def get_city_tweet_counts(sal_gcc_dict, tweet, city_tweet_counts):
 This function is used to get the number of tweets made by each author
 '''
 def get_author_tweet_counts(tweet, author_tweet_counts):
-    author_id = tweet['data']["author_id"]
+    author_id = tweet["author_id"]
     if author_id in author_tweet_counts:
         author_tweet_counts[author_id] += 1
     else:
@@ -132,9 +132,8 @@ def get_author_tweet_counts(tweet, author_tweet_counts):
 This function is used to get the number of tweets made by each author in each capital city
 '''
 def get_author_city_counts(sal_gcc_dict, tweet, author_city_counts):
-    
-    author_id = tweet['data']["author_id"]
-    full_name = tweet["includes"]["places"][0]["full_name"]
+    author_id = tweet["author_id"]
+    full_name = tweet["full_name"]
     split_names = split_full_name(full_name)
     tweet_sal_keys = generate_tweet_sal_keys(split_names)
 
@@ -243,24 +242,28 @@ def main():
     sub_city_tweet_counts = {city: 0 for city in capital_city_lst}
     sub_author_tweet_counts = {}
     sub_author_city_counts = {}
+    
     with open(twitter_data, 'rb') as f:
         parser = ijson.parse(f)
-        
         count = 0
-        for chunk in ijson.items(parser, 'item'):
+        tweet = {}
+        for prefix, event, value in parser:
             if count % size == rank:
-                tweet = {'data': chunk['data'], 'includes': chunk['includes']} # keep only wanted data
-                
-                get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
-                get_author_tweet_counts(tweet, sub_author_tweet_counts)
-                get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
+                if prefix == "item.data.author_id":
+                    tweet['author_id'] = value
+                if prefix == "item.includes.places.item.full_name":
+                    tweet["full_name"] = value
+                if len(tweet) == 2: # keep only wanted data
+                    get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
+                    get_author_tweet_counts(tweet, sub_author_tweet_counts)
+                    get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
+                    tweet = {}
             count += 1
         
     # Gather the sub-results
     city_tweet_counts_gather = comm.gather(sub_city_tweet_counts, root=0)
     author_tweet_counts_gather = comm.gather(sub_author_tweet_counts, root=0)
     author_city_counts_gather = comm.gather(sub_author_city_counts, root=0)
-    
     
     if rank == 0:
         city_tweets_df, top_ten_df, author_city_counts_df = output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather)
