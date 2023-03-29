@@ -157,13 +157,9 @@ This function is used to process the gathered data and
 output the results of the analysis in dataframe format
 '''
 def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather):
-    city_tweet_counts = defaultdict(int)
     author_tweet_counts = {}
+    city_tweet_counts = defaultdict(int)
     author_city_counts = {}
-    
-    for lst in city_tweet_counts_gather:
-        for key, value in lst.items():
-            city_tweet_counts[key] += value
             
     for lst in author_tweet_counts_gather:
         for key, value in lst.items():
@@ -171,6 +167,10 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
                 author_tweet_counts[key] += value
             else:
                 author_tweet_counts[key] = value
+                
+    for lst in city_tweet_counts_gather:
+        for key, value in lst.items():
+            city_tweet_counts[key] += value
                 
     for lst in author_city_counts_gather:
         for key, value in lst.items():
@@ -183,17 +183,17 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
             else:
                 author_city_counts[key] = value
     
-    # Output of tweets number in each captial city
-    city_tweets_df = pd.DataFrame.from_dict(
-        city_tweet_counts, orient="index", columns=["Number of Tweets Made"]
-    ).rename_axis("Greater Capital City")
-    
     # Output of top ten authors with most numebr of tweets
     top_ten_author_tweet_counts = sorted(author_tweet_counts.items(), key=lambda x: x[1], reverse=True)[:10]
     top_ten_author_tweet_counts_df = pd.DataFrame(
         top_ten_author_tweet_counts, columns=["Author Id", "Number of Tweets Made"]
     ).rename_axis("Rank")
     top_ten_author_tweet_counts_df.index += 1
+    
+    # Output of tweets number in each captial city
+    city_tweets_df = pd.DataFrame.from_dict(
+        city_tweet_counts, orient="index", columns=["Number of Tweets Made"]
+    ).rename_axis("Greater Capital City")
     
     # Sort the dict by the unique number of cities
     top_ten_author_city_counts = sorted(author_city_counts.items(), key=lambda x: (len(x[1]), sum(x[1].values())), reverse=True)[:10]
@@ -212,7 +212,7 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
     top_ten_author_city_counts_df = pd.DataFrame(rows).rename_axis("Rank")
     top_ten_author_city_counts_df.index += 1
     
-    return city_tweets_df, top_ten_author_tweet_counts_df, top_ten_author_city_counts_df
+    return top_ten_author_tweet_counts_df, city_tweets_df, top_ten_author_city_counts_df
 
 def main():
     comm = MPI.COMM_WORLD
@@ -254,19 +254,19 @@ def main():
                 if prefix == "item.includes.places.item.full_name":
                     tweet["full_name"] = value
                 if len(tweet) == 2: # keep only wanted data
-                    get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
                     get_author_tweet_counts(tweet, sub_author_tweet_counts)
+                    get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
                     get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
                     tweet = {}
             count += 1
         
     # Gather the sub-results
-    city_tweet_counts_gather = comm.gather(sub_city_tweet_counts, root=0)
     author_tweet_counts_gather = comm.gather(sub_author_tweet_counts, root=0)
+    city_tweet_counts_gather = comm.gather(sub_city_tweet_counts, root=0)
     author_city_counts_gather = comm.gather(sub_author_city_counts, root=0)
     
     if rank == 0:
-        city_tweets_df, top_ten_author_tweet_counts_df, top_ten_author_city_counts_df = output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather)
+        top_ten_author_tweet_counts_df, city_tweets_df, top_ten_author_city_counts_df = output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather)
         
         # city_tweets_df.to_csv("./output/city_tweets.csv") 
         # top_ten_df.to_csv("./output/top_ten.csv")
@@ -274,9 +274,9 @@ def main():
         
         pd.set_option('display.max_columns', None)
         
-        print(city_tweets_df)
-        print("\n", "*"*80, "\n")
         print(top_ten_author_tweet_counts_df)
+        print("\n", "*"*80, "\n")
+        print(city_tweets_df)
         print("\n", "*"*80, "\n")
         print(top_ten_author_city_counts_df)
 
