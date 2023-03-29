@@ -189,17 +189,17 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
     ).rename_axis("Greater Capital City")
     
     # Output of top ten authors with most numebr of tweets
-    top_ten = sorted(author_tweet_counts.items(), key=lambda x: x[1], reverse=True)[:10]
-    top_ten_df = pd.DataFrame(
-        top_ten, columns=["Author Id", "Number of Tweets Made"]
+    top_ten_author_tweet_counts = sorted(author_tweet_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+    top_ten_author_tweet_counts_df = pd.DataFrame(
+        top_ten_author_tweet_counts, columns=["Author Id", "Number of Tweets Made"]
     ).rename_axis("Rank")
-    top_ten_df.index += 1
+    top_ten_author_tweet_counts_df.index += 1
     
     # Sort the dict by the unique number of cities
-    author_city_counts = sorted(author_city_counts.items(), key=lambda x: (len(x[1]), sum(x[1].values())), reverse=True)[:10]
+    top_ten_author_city_counts = sorted(author_city_counts.items(), key=lambda x: (len(x[1]), sum(x[1].values())), reverse=True)[:10]
     rows = []
 
-    for i, (author_id, city_tweet_counts) in enumerate(author_city_counts):
+    for i, (author_id, city_tweet_counts) in enumerate(top_ten_author_city_counts):
         num_unique_cities = len(city_tweet_counts)
         num_tweets = sum(city_tweet_counts.values())
         row = {
@@ -209,10 +209,10 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
         }
         rows.append(row)
         
-    author_city_counts_df = pd.DataFrame(rows).rename_axis("Rank")
-    author_city_counts_df.index += 1
+    top_ten_author_city_counts_df = pd.DataFrame(rows).rename_axis("Rank")
+    top_ten_author_city_counts_df.index += 1
     
-    return city_tweets_df, top_ten_df, author_city_counts_df
+    return city_tweets_df, top_ten_author_tweet_counts_df, top_ten_author_city_counts_df
 
 def main():
     comm = MPI.COMM_WORLD
@@ -266,7 +266,7 @@ def main():
     author_city_counts_gather = comm.gather(sub_author_city_counts, root=0)
     
     if rank == 0:
-        city_tweets_df, top_ten_df, author_city_counts_df = output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather)
+        city_tweets_df, top_ten_author_tweet_counts_df, top_ten_author_city_counts_df = output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather)
         
         # city_tweets_df.to_csv("./output/city_tweets.csv") 
         # top_ten_df.to_csv("./output/top_ten.csv")
@@ -276,9 +276,9 @@ def main():
         
         print(city_tweets_df)
         print("\n", "*"*80, "\n")
-        print(top_ten_df)
+        print(top_ten_author_tweet_counts_df)
         print("\n", "*"*80, "\n")
-        print(author_city_counts_df)
+        print(top_ten_author_city_counts_df)
 
         print("Process 0: Finished in {:.2f} seconds".format(time.time() - start))
 
