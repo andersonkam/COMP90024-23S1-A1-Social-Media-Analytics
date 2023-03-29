@@ -244,20 +244,15 @@ def main():
     sub_author_city_counts = {}
     
     with open(twitter_data, 'rb') as f:
-        parser = ijson.parse(f)
+        objects = ijson.items(f, 'item')
         count = 0
-        tweet = {}
-        for prefix, event, value in parser:
+        for object in objects:
             if count % size == rank:
-                if prefix == "item.data.author_id":
-                    tweet['author_id'] = value
-                if prefix == "item.includes.places.item.full_name":
-                    tweet["full_name"] = value
-                if len(tweet) == 2: # keep only wanted data
-                    get_author_tweet_counts(tweet, sub_author_tweet_counts)
-                    get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
-                    get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
-                    tweet = {}
+                tweet = {'author_id': object['data']["author_id"], 
+                         "full_name": object["includes"]["places"][0]["full_name"]}
+                get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
+                get_author_tweet_counts(tweet, sub_author_tweet_counts)
+                get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
             count += 1
         
     # Gather the sub-results
