@@ -3,26 +3,12 @@ New python executable in /home/doncd/venvs/venv-3.7.4/bin/python
 Installing setuptools, pip, wheel...
 done.
 Requirement already satisfied: pandas in ./venvs/venv-3.7.4/lib/python3.7/site-packages (1.3.5)
-Requirement already satisfied: numpy>=1.17.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (1.21.6)
 Requirement already satisfied: python-dateutil>=2.7.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2.8.2)
+Requirement already satisfied: numpy>=1.17.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (1.21.6)
 Requirement already satisfied: pytz>=2017.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2022.7.1)
 Requirement already satisfied: six>=1.5 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from python-dateutil>=2.7.3->pandas) (1.16.0)
 Requirement already satisfied: ijson in ./venvs/venv-3.7.4/lib/python3.7/site-packages (3.2.0.post0)
 Reading data...
-                      Number of Tweets Made
-Greater Capital City                       
-1gsyd                               1549121
-2gmel                               1594405
-3gbri                                600648
-4gade                                323930
-5gper                                413018
-6ghob                                 58247
-7gdar                                 31407
-8acte                                141492
-9oter                                   127
-
- ******************************************************************************** 
-
                 Author Id  Number of Tweets Made
 Rank                                            
 1     1498063511204761601                  29108
@@ -35,6 +21,20 @@ Rank
 8      820431428835885059                  14372
 9     1104295492433764353                  14330
 10     778785859030003712                  14263
+
+ ******************************************************************************** 
+
+                      Number of Tweets Made
+Greater Capital City                       
+1gsyd                               1549121
+2gmel                               1594405
+3gbri                                600648
+4gade                                323930
+5gper                                413018
+6ghob                                 58247
+7gdar                                 31407
+8acte                                141492
+9oter                                   127
 
  ******************************************************************************** 
 
@@ -63,30 +63,30 @@ Rank
 8     #170 tweets - 142gmel, 7acte, 5gbri, 7ghob, 2g...  
 9     #149 tweets - 14gade, 45gmel, 38gsyd, 26gbri, ...  
 10    #94 tweets - 24gmel, 32gsyd, 4ghob, 7gbri, 1gd...  
-Process 0: Finished in 474.14 seconds
+Process 0: Finished in 453.84 seconds
 
-real	7m55.802s
-user	62m5.797s
-sys	0m47.953s
-Job ID           : 45880446
+real	7m35.548s
+user	59m38.183s
+sys	0m43.536s
+Job ID           : 45903730
 Cluster          : spartan
 User/Project     : doncd/comp90024
 Nodes            : 1
-Wall-clock time  : 00:08:19 / 01:00:00
+Wall-clock time  : 00:08:00 / 01:00:00
 
-Displaying overall resources usage from 2023-03-28 16:44:46 to 2023-03-28 16:53:05:
+Displaying overall resources usage from 2023-03-29 17:53:24 to 2023-03-29 18:01:24:
 
 NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
 
-spartan-bm087 : 
-                CPU# 1    : 94.8   (  93.3 /   1.6 /   0.1 /   5.0 ) 
-                CPU# 2    : 94.9   (  93.5 /   1.4 /   0.1 /   5.0 ) 
-                CPU# 3    : 95.9   (  94.3 /   1.5 /   0.1 /   4.0 ) 
-                CPU# 4    : 94.6   (  93.2 /   1.4 /   0.0 /   5.3 ) 
-                CPU# 5    : 94.8   (  93.4 /   1.3 /   0.1 /   5.2 ) 
-                CPU# 6    : 95.0   (  93.7 /   1.3 /   0.1 /   4.9 ) 
-                CPU# 7    : 94.8   (  93.4 /   1.4 /   0.1 /   5.1 ) 
-                CPU# 8    : 94.6   (  93.1 /   1.4 /   0.1 /   5.4 ) 
+spartan-bm008 : 
+                CPU# 1    : 92.8   (  91.6 /   1.2 /   0.0 /   7.2 ) 
+                CPU# 2    : 93.1   (  91.9 /   1.2 /   0.0 /   6.9 ) 
+                CPU# 3    : 92.8   (  91.6 /   1.2 /   0.0 /   7.2 ) 
+                CPU# 4    : 93.2   (  91.9 /   1.3 /   0.0 /   6.8 ) 
+                CPU# 5    : 93.6   (  92.3 /   1.3 /   0.1 /   6.4 ) 
+                CPU# 6    : 94.2   (  92.6 /   1.6 /   0.1 /   5.7 ) 
+                CPU# 7    : 93.1   (  91.8 /   1.2 /   0.1 /   6.9 ) 
+                CPU# 8    : 92.8   (  91.6 /   1.2 /   0.0 /   7.2 ) 
 
 
 Allocated CPUs            : 8    
@@ -94,7 +94,7 @@ Allocated CPUs            : 8
   CPUs with usage <50%    : 0    
   CPUs with usage >50%    : 8    
 
-Memory used (RAM)         : 4.1%  [1325MB of 32000MB]
+Memory used (RAM)         : 4.1%  [1296MB of 32000MB]
 
 --------------------------------------------
 
