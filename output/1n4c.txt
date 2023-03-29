@@ -3,86 +3,86 @@ New python executable in /home/doncd/venvs/venv-3.7.4/bin/python
 Installing setuptools, pip, wheel...
 done.
 Requirement already satisfied: pandas in ./venvs/venv-3.7.4/lib/python3.7/site-packages (1.3.5)
-Requirement already satisfied: python-dateutil>=2.7.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2.8.2)
 Requirement already satisfied: numpy>=1.17.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (1.21.6)
+Requirement already satisfied: python-dateutil>=2.7.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2.8.2)
 Requirement already satisfied: pytz>=2017.3 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from pandas) (2022.7.1)
 Requirement already satisfied: six>=1.5 in ./venvs/venv-3.7.4/lib/python3.7/site-packages (from python-dateutil>=2.7.3->pandas) (1.16.0)
 Requirement already satisfied: ijson in ./venvs/venv-3.7.4/lib/python3.7/site-packages (3.2.0.post0)
 Reading data...
                 Author Id  Number of Tweets Made
 Rank                                            
-1     1498063511204761601                  26904
-2      826332877457481728                  20806
-3     1250331934242123776                  18272
-4     1089023364973219840                  16186
-5      820431428835885059                  15459
-6               233782487                  15140
-7     1423662808311287813                  14980
-8     1270672820792508417                  14601
-9      778785859030003712                  14572
-10    1104295492433764353                  14528
+1     1498063511204761601                  68477
+2     1089023364973219840                  28128
+3      826332877457481728                  27718
+4     1250331934242123776                  25350
+5     1423662808311287813                  21034
+6     1183144981252280322                  20765
+7     1270672820792508417                  20503
+8      820431428835885059                  20063
+9      778785859030003712                  19403
+10    1104295492433764353                  18781
 
  ******************************************************************************** 
 
-                      Number of Tweets Made
-Greater Capital City                       
-1gsyd                               1549643
-2gmel                               1595623
-3gbri                                602427
-4gade                                326008
-5gper                                416559
-6ghob                                 57041
-7gdar                                 31594
-8acte                                141593
-9oter                                   127
+                                      Number of Tweets Made
+Greater Capital City                                       
+1gsyd (Greater Sydney)                              2220892
+2gmel (Greater Melbourne)                           2287625
+3gbri (Greater Brisbane)                             860299
+4gade (Greater Adelaide)                             466521
+5gper (Greater Perth)                                589771
+6ghob (Greater Hobart)                                90891
+7gdar (Greater Darwin)                                46390
+8acte (Australian Capital Territory)                 202655
+9oter (Other Territories)                               182
 
  ******************************************************************************** 
 
-               Author Id  Number of Unique City Locations  \
-Rank                                                        
-1     702290904460169216                                9   
-2               17285408                                8   
-3               87188071                                8   
-4             1361519083                                8   
-5              502381727                                8   
-6     774694926135222272                                8   
-7     921197448885886977                                8   
-8              601712763                                8   
-9             2647302752                                8   
-10            3686036533                                7   
+                Author Id  Number of Unique City Locations  \
+Rank                                                         
+1     1429984556451389440                                8   
+2      702290904460169216                                8   
+3                17285408                                8   
+4                87188071                                8   
+5      774694926135222272                                8   
+6              1361519083                                8   
+7               502381727                                8   
+8      921197448885886977                                8   
+9               601712763                                8   
+10             2647302752                                8   
 
                                                 #Tweets  
 Rank                                                     
-1     #779 tweets - 168gmel, 154gbri, 29ghob, 82gade...  
-2     #841 tweets - 746gsyd, 27gbri, 6ghob, 1gade, 3...  
-3     #333 tweets - 40gper, 97gsyd, 30acte, 14ghob, ...  
-4     #186 tweets - 25gmel, 137gdar, 12gsyd, 4acte, ...  
-5     #162 tweets - 139gmel, 2gper, 1gsyd, 8acte, 4g...  
-6     #160 tweets - 20gbri, 16gade, 24gsyd, 14gdar, ...  
-7     #149 tweets - 44gmel, 19gade, 23gbri, 23gper, ...  
-8     #100 tweets - 29gmel, 34gsyd, 5ghob, 5gbri, 8g...  
-9     #53 tweets - 9gsyd, 11gmel, 20gbri, 4acte, 2gd...  
-10    #1828 tweets - 1078gmel, 275gsyd, 161acte, 67g...  
-Process 0: Finished in 510.36 seconds
+1     #1921 tweets - 11gsyd, 1880gmel, 6gbri, 2gade,...  
+2     #1226 tweets - 338gsyd, 263gmel, 234gbri, 128g...  
+3     #1209 tweets - 1061gsyd, 60gmel, 40gbri, 3gade...  
+4     #402 tweets - 116gsyd, 86gmel, 65gbri, 29gade,...  
+5     #272 tweets - 37gsyd, 38gmel, 37gbri, 28gade, ...  
+6     #266 tweets - 18gsyd, 36gmel, 1gbri, 9gade, 1g...  
+7     #250 tweets - 2gsyd, 214gmel, 8gbri, 4gade, 3g...  
+8     #208 tweets - 49gsyd, 58gmel, 37gbri, 24gade, ...  
+9     #146 tweets - 44gsyd, 39gmel, 11gbri, 19gade, ...  
+10    #80 tweets - 13gsyd, 16gmel, 32gbri, 3gade, 4g...  
+Process 0: Finished in 294.66 seconds
 
-real	8m34.371s
-user	33m31.637s
-sys	0m22.358s
-Job ID           : 45903733
+real	4m56.048s
+user	19m13.855s
+sys	0m22.544s
+Job ID           : 45913350
 Cluster          : spartan
 User/Project     : doncd/comp90024
 Nodes            : 1
-Wall-clock time  : 00:08:58 / 01:00:00
+Wall-clock time  : 00:05:21 / 01:00:00
 
-Displaying overall resources usage from 2023-03-29 16:19:47 to 2023-03-29 16:28:45:
+Displaying overall resources usage from 2023-03-30 01:14:42 to 2023-03-30 01:20:03:
 
 NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
 
-spartan-bm119 : 
-                CPU# 1    : 97.6   (  96.2 /   1.3 /   0.1 /   2.3 ) 
-                CPU# 2    : 94.8   (  93.8 /   1.0 /   0.0 /   5.1 ) 
-                CPU# 3    : 94.3   (  93.2 /   1.1 /   0.0 /   5.7 ) 
-                CPU# 4    : 94.8   (  93.7 /   1.1 /   0.0 /   5.2 ) 
+spartan-bm022 : 
+                CPU# 1    : 86.4   (  84.6 /   1.8 /   0.0 /  13.6 ) 
+                CPU# 2    : 86.3   (  84.2 /   2.0 /   0.0 /  13.7 ) 
+                CPU# 3    : 91.6   (  89.7 /   1.9 /   0.1 /   8.4 ) 
+                CPU# 4    : 96.5   (  94.1 /   2.3 /   0.1 /   3.4 ) 
 
 
 Allocated CPUs            : 4    
@@ -90,7 +90,7 @@ Allocated CPUs            : 4
   CPUs with usage <50%    : 0    
   CPUs with usage >50%    : 4    
 
-Memory used (RAM)         : 4.2%  [681MB of 16000MB]
+Memory used (RAM)         : 4.2%  [677MB of 16000MB]
 
 --------------------------------------------
 
