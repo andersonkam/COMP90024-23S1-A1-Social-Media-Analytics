@@ -14,6 +14,10 @@ STATE_DICT = {'new south wales': 'nsw', 'queensland': 'qld', 'south australia': 
               'tasmania': 'tas', 'victoria': 'vic', 'western australia': 'wa', 
               'australian capital territory': 'act', 'northern territory': 'nt'}
 
+GCC_CODE_DICT = {'Greater Sydney': '1gsyd', 'Greater Melbourne': '2gmel', 'Greater Brisbane': '3gbri',
+            'Greater Adelaide': '4gade', 'Greater Perth': '5gper', 'Greater Hobart': '6ghob',
+            'Greater Darwin': '7gdar', 'Australian Capital Territory': '8acte', 'Other Territories': '9oter'}
+
 '''
 This function is used to get the list of capital cities required
 '''
@@ -194,18 +198,24 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
     city_tweets_df = pd.DataFrame.from_dict(
         city_tweet_counts, orient="index", columns=["Number of Tweets Made"]
     ).rename_axis("Greater Capital City")
+    city_tweets_df.index = city_tweets_df.index.map(lambda x: f"{x} ({[k for k, v in GCC_CODE_DICT.items() if v == x][0]})")
     
+    # Output of top ten authors with most number of tweets in each capital city
     # Sort the dict by the unique number of cities
-    top_ten_author_city_counts = sorted(author_city_counts.items(), key=lambda x: (len(x[1]), sum(x[1].values())), reverse=True)[:10]
+    top_ten_author_city_counts = sorted(author_city_counts.items(), 
+                                        key=lambda x: (len(x[1]), sum(x[1].values())), reverse=True)[:10]
     rows = []
-
     for i, (author_id, city_tweet_counts) in enumerate(top_ten_author_city_counts):
         num_unique_cities = len(city_tweet_counts)
         num_tweets = sum(city_tweet_counts.values())
+        
+        code_ordered_city_tweet_counts = ', '.join(f"{city_tweet_counts.get(k, 0)}{k[1:]}"
+                                   for v, k in GCC_CODE_DICT.items())
+        
         row = {
             'Author Id': author_id,
             'Number of Unique City Locations': num_unique_cities,
-            '#Tweets': f"#{num_tweets} tweets - {', '.join(f'{count}{city[1:]}' for city, count in city_tweet_counts.items())}"
+            '#Tweets': f"#{num_tweets} tweets - {code_ordered_city_tweet_counts}"
         }
         rows.append(row)
         
@@ -263,9 +273,9 @@ def main():
     if rank == 0:
         top_ten_author_tweet_counts_df, city_tweets_df, top_ten_author_city_counts_df = output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_counts_gather)
         
+        # top_ten_author_tweet_counts_df.to_csv("./output/top_ten_author_tweet_counts.csv")
         # city_tweets_df.to_csv("./output/city_tweets.csv") 
-        # top_ten_df.to_csv("./output/top_ten.csv")
-        # author_city_counts_df.to_csv("./output/cauthor_city_counts.csv")
+        # top_ten_author_city_counts_df.to_csv("./output/top_ten_author_city_counts.csv")
         
         pd.set_option('display.max_columns', None)
         
