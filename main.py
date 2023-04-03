@@ -6,9 +6,7 @@ import time
 from pprint import pprint
 from collections import defaultdict
 from mpi4py import MPI
-
 import pandas as pd
-import cProfile
 
 STATE_DICT = {'new south wales': 'nsw', 'queensland': 'qld', 'south australia': 'sa', 
               'tasmania': 'tas', 'victoria': 'vic', 'western australia': 'wa', 
@@ -289,4 +287,3 @@ def main():
 
 if __name__=="__main__": 
     main()
-    # cProfile.run("main()", sort="cumtime")
