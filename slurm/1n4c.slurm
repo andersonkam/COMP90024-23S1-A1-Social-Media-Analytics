@@ -34,8 +34,6 @@ module load gcccore/10.2.0 python/3.7.4
 module load mpi4py/3.0.2-timed-pingpong
 virtualenv ~/venvs/venv-3.7.4
 source ~/venvs/venv-3.7.4/bin/activate
-# pip install pandas
-# pip install ijson
 
 time mpirun -n 4 python main.py sal.json bigTwitter.json
 
