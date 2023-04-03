@@ -4,7 +4,7 @@
 #SBATCH --partition=physical
 
 # The name of the job:
-#SBATCH --job-name="2C8N"
+#SBATCH --job-name="2N8C"
 
 # The project ID which this job should run under:
 #SBATCH --account="COMP90024"
