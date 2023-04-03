@@ -208,8 +208,7 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
         num_tweets = sum(city_tweet_counts.values())
         
         code_ordered_city_tweet_counts = ', '.join(f"{city_tweet_counts.get(k, 0)}{k[1:]}"
-                                   for v, k in GCC_CODE_DICT.items())
-        
+                                   for v, k in GCC_CODE_DICT.items() if city_tweet_counts.get(k, 0) != 0)
         row = {
             'Author Id': author_id,
             'Number of Unique City Locations': num_unique_cities,
