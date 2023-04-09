@@ -44,40 +44,31 @@ Rank
 8      921197448885886977           8 (#208 tweets - 49gsyd, 58gmel, 37gbri, 24gade, 28gper, 4ghob, 1gdar, 7acte)
 9               601712763          8 (#146 tweets - 44gsyd, 39gmel, 11gbri, 19gade, 14gper, 8ghob, 1gdar, 10acte)
 10             2647302752              8 (#80 tweets - 13gsyd, 16gmel, 32gbri, 3gade, 4gper, 5ghob, 3gdar, 4acte)
-Process 0: Finished in 100.71 seconds
+Process 0: Finished in 353.73 seconds
 
-real	1m42.549s
-user	6m33.139s
-sys	0m9.664s
-Job ID           : 46224968
+real	5m54.754s
+user	5m47.353s
+sys	0m5.878s
+Job ID           : 46224965
 Cluster          : spartan
 User/Project     : doncd/comp90024
-Nodes            : 2
-Wall-clock time  : 00:02:04 / 01:00:00
+Nodes            : 1
+Wall-clock time  : 00:06:19 / 01:00:00
 
-Displaying overall resources usage from 2023-04-09 19:33:09 to 2023-04-09 19:35:13:
+Displaying overall resources usage from 2023-04-09 19:33:09 to 2023-04-09 19:39:28:
 
 NODE            CPU#        TOT%   ( USR   / SYS   / WIO   / IDLE  ) 
 
-spartan-bm101 : 
-                CPU# 1    : 83.0   (  80.8 /   2.3 /   0.3 /  16.7 ) 
-                CPU# 2    : 90.5   (  88.0 /   2.5 /   0.1 /   9.4 ) 
-                CPU# 3    : 72.0   (  69.5 /   2.5 /   0.5 /  27.4 ) 
-                CPU# 4    : 68.9   (  66.7 /   2.2 /   0.1 /  31.0 ) 
-
-spartan-bm118 : 
-                CPU# 5    : 80.9   (  79.0 /   1.8 /   0.0 /  19.1 ) 
-                CPU# 6    : 81.0   (  78.9 /   2.0 /   0.0 /  19.0 ) 
-                CPU# 7    : 80.9   (  79.0 /   2.0 /   0.0 /  19.1 ) 
-                CPU# 8    : 80.9   (  78.9 /   2.0 /   0.0 /  19.1 ) 
+spartan-bm022 : 
+                CPU# 1    : 97.0   (  95.1 /   1.9 /   0.0 /   3.0 ) 
 
 
-Allocated CPUs            : 8    
+Allocated CPUs            : 1    
   CPUs with usage <25%    : 0    
   CPUs with usage <50%    : 0    
-  CPUs with usage >50%    : 8    
+  CPUs with usage >50%    : 1    
 
-Memory used (RAM)         : 1.8%  [586MB of 32000MB]
+Memory used (RAM)         : 5.0%  [201MB of 4000MB]
 
 --------------------------------------------
 
