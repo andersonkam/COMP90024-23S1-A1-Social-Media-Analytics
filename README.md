@@ -21,6 +21,20 @@ The application allows a given number of nodes and cores to be utilized. Specifi
 
 The resources are set when submitting the search application with the appropriate SLURM options.
 
+## Usage
+To run the program locally, you can use the following command:
+```bash
+mpirun -n <number of processes> python <script name> <sal_data> <twitter_data>
+```
+To run the program on SPARTAN, you can use the following SLURM options:
+```bash
+sbatch slurm/1n1c.slurm      # For 1 node and 1 core
+sbatch slurm/1n8c.slurm      # For 1 node and 8 cores
+sbatch slurm/2n8c.slurm      # For 2 nodes and 8 cores (with 4 cores per node)
+```
+Make sure to contain all the SLURM files in the slurm folder on SPARTAN and have all script files and data files in the root directory. The input file paths in the SLURM files should be updated based on your requirements.
+
+
 ## **Acknowledgments**
 - The University of Melbourne
 - COMP90024 Cluster and Cloud Computing Subject
