@@ -279,7 +279,9 @@ def main():
                 
             while not end_read:
                 next_line = f.readline()
-                if next_line == '  },\n' or next_line == '  }\n':
+                if next_line == ',\n':
+                    pass
+                elif next_line == '  },\n' or next_line == '  }\n':
                     tweet_str += '}'
                     try:
                         tweet = extract_tweet_data(tweet_str)
@@ -291,6 +293,14 @@ def main():
                         tweet_str = ''
 
                     if f.tell() >= end_index:
+                        try:
+                            tweet = extract_tweet_data(tweet_str)
+                            get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
+                            get_author_tweet_counts(tweet, sub_author_tweet_counts)
+                            get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
+                            tweet_str = ''
+                        except:
+                            tweet_str = ''
                         end_read = True
                     
                 elif next_line == '':
