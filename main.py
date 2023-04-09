@@ -256,33 +256,34 @@ def main():
     sub_city_tweet_counts = {city: 0 for city in capital_city_lst}
     sub_author_tweet_counts = {}
     sub_author_city_counts = {}
-    if size == 1:
-        with open(twitter_data, 'rb') as f:
-            objects = ijson.items(f, 'item')
-            for object in objects:
-                tweet = {'author_id': object['data']["author_id"], 
-                        "full_name": object["includes"]["places"][0]["full_name"]}
-                get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
-                get_author_tweet_counts(tweet, sub_author_tweet_counts)
-                get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
-    else:
-        total_bytes = os.path.getsize(twitter_data)
-        start_index = rank * (total_bytes // size)
-        end_index = (rank + 1) * (total_bytes // size)
-        tweet_str = ''
-        end_read = False
-        
-        with open(twitter_data, 'r', encoding='utf-8') as f:
-            f.seek(start_index)
-            if rank == 0:
-                f.readline()
-                
-            while not end_read:
-                next_line = f.readline()
-                if next_line == ',\n':
-                    pass
-                elif next_line == '  },\n' or next_line == '  }\n':
-                    tweet_str += '}'
+
+    total_bytes = os.path.getsize(twitter_data)
+    start_index = rank * (total_bytes // size)
+    end_index = (rank + 1) * (total_bytes // size)
+    tweet_str = ''
+    end_read = False
+    
+    with open(twitter_data, 'r', encoding='utf-8') as f:
+        f.seek(start_index)
+        if rank == 0:
+            f.readline()
+            
+        while not end_read:
+            next_line = f.readline()
+            if next_line == ',\n':
+                pass
+            elif next_line == '  },\n' or next_line == '  }\n':
+                tweet_str += '}'
+                try:
+                    tweet = extract_tweet_data(tweet_str)
+                    get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
+                    get_author_tweet_counts(tweet, sub_author_tweet_counts)
+                    get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
+                    tweet_str = ''
+                except:
+                    tweet_str = ''
+
+                if f.tell() >= end_index:
                     try:
                         tweet = extract_tweet_data(tweet_str)
                         get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
@@ -291,22 +292,12 @@ def main():
                         tweet_str = ''
                     except:
                         tweet_str = ''
-
-                    if f.tell() >= end_index:
-                        try:
-                            tweet = extract_tweet_data(tweet_str)
-                            get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
-                            get_author_tweet_counts(tweet, sub_author_tweet_counts)
-                            get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
-                            tweet_str = ''
-                        except:
-                            tweet_str = ''
-                        end_read = True
-                    
-                elif next_line == '':
                     end_read = True
-                else:
-                    tweet_str += next_line
+                
+            elif next_line == '':
+                end_read = True
+            else:
+                tweet_str += next_line
     
         
     # Gather the sub-results
