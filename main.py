@@ -7,6 +7,7 @@ from pprint import pprint
 from collections import defaultdict
 from mpi4py import MPI
 import pandas as pd
+import os
 
 STATE_DICT = {'new south wales': 'nsw', 'queensland': 'qld', 'south australia': 'sa', 
               'tasmania': 'tas', 'victoria': 'vic', 'western australia': 'wa', 
@@ -105,7 +106,6 @@ def get_city_tweet_counts(sal_gcc_dict, tweet, city_tweet_counts):
     full_name = tweet["full_name"]
     split_names = split_full_name(full_name)
     tweet_sal_keys = generate_tweet_sal_keys(split_names)
-    
     # Ordering the sal keys by tuple with more detailed sal information first, string after
     sorted_tweet_sal_keys = sorted(tweet_sal_keys, key=lambda x: isinstance(x, tuple) != True)
 
@@ -185,18 +185,21 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
             else:
                 author_city_counts[key] = value
     
-    # Output of top ten authors with most numebr of tweets
+    # Output of top ten authors with most number of tweets
     top_ten_author_tweet_counts = sorted(author_tweet_counts.items(), key=lambda x: x[1], reverse=True)[:10]
     top_ten_author_tweet_counts_df = pd.DataFrame(
         top_ten_author_tweet_counts, columns=["Author Id", "Number of Tweets Made"]
     ).rename_axis("Rank")
     top_ten_author_tweet_counts_df.index += 1
     
-    # Output of tweets number in each captial city
+    
+    # Output of tweets number in each capital city
+    city_tweet_counts = dict(sorted(city_tweet_counts.items(),  key=lambda x: x[1], reverse=True))
     city_tweets_df = pd.DataFrame.from_dict(
         city_tweet_counts, orient="index", columns=["Number of Tweets Made"]
     ).rename_axis("Greater Capital City")
     city_tweets_df.index = city_tweets_df.index.map(lambda x: f"{x} ({[k for k, v in GCC_CODE_DICT.items() if v == x][0]})")
+    city_tweets_df.sort_values(by="Number of Tweets Made")
     
     # Output of top ten authors with most number of tweets in each capital city
     # Sort the dict by the unique number of cities
@@ -211,8 +214,7 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
                                    for v, k in GCC_CODE_DICT.items() if city_tweet_counts.get(k, 0) != 0)
         row = {
             'Author Id': author_id,
-            'Number of Unique City Locations': num_unique_cities,
-            '#Tweets': f"#{num_tweets} tweets - {code_ordered_city_tweet_counts}"
+            f"{'Number of Unique City Locations and #Tweets': <20}": f"{num_unique_cities} (#{num_tweets} tweets - {code_ordered_city_tweet_counts})"
         }
         rows.append(row)
         
@@ -220,6 +222,11 @@ def output(city_tweet_counts_gather, author_tweet_counts_gather, author_city_cou
     top_ten_author_city_counts_df.index += 1
     
     return top_ten_author_tweet_counts_df, city_tweets_df, top_ten_author_city_counts_df
+
+def extract_tweet_data(tweet_str):
+    tweet_json = json.loads(tweet_str)
+    return {'author_id': tweet_json['data']["author_id"], 
+            "full_name": tweet_json["includes"]["places"][0]["full_name"]}
 
 def main():
     comm = MPI.COMM_WORLD
@@ -249,18 +256,48 @@ def main():
     sub_city_tweet_counts = {city: 0 for city in capital_city_lst}
     sub_author_tweet_counts = {}
     sub_author_city_counts = {}
-    
-    with open(twitter_data, 'rb') as f:
-        objects = ijson.items(f, 'item')
-        count = 0
-        for object in objects:
-            if count % size == rank:
+    if size == 1:
+        with open(twitter_data, 'rb') as f:
+            objects = ijson.items(f, 'item')
+            for object in objects:
                 tweet = {'author_id': object['data']["author_id"], 
-                         "full_name": object["includes"]["places"][0]["full_name"]}
+                        "full_name": object["includes"]["places"][0]["full_name"]}
                 get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
                 get_author_tweet_counts(tweet, sub_author_tweet_counts)
                 get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
-            count += 1
+    else:
+        total_bytes = os.path.getsize(twitter_data)
+        start_index = rank * (total_bytes // size)
+        end_index = (rank + 1) * (total_bytes // size)
+        tweet_str = ''
+        end_read = False
+        
+        with open(twitter_data, 'r', encoding='utf-8') as f:
+            f.seek(start_index)
+            if rank == 0:
+                f.readline()
+                
+            while not end_read:
+                next_line = f.readline()
+                if next_line == '  },\n' or next_line == '  }\n':
+                    tweet_str += '}'
+                    try:
+                        tweet = extract_tweet_data(tweet_str)
+                        get_city_tweet_counts(sal_gcc_dict, tweet, sub_city_tweet_counts)
+                        get_author_tweet_counts(tweet, sub_author_tweet_counts)
+                        get_author_city_counts(sal_gcc_dict, tweet, sub_author_city_counts)
+                        tweet_str = ''
+                    except:
+                        tweet_str = ''
+
+                    if f.tell() >= end_index:
+                        end_read = True
+                    
+                elif next_line == '':
+                    end_read = True
+                else:
+                    tweet_str += next_line
+    
         
     # Gather the sub-results
     author_tweet_counts_gather = comm.gather(sub_author_tweet_counts, root=0)
@@ -274,13 +311,11 @@ def main():
         # city_tweets_df.to_csv("./output/city_tweets.csv") 
         # top_ten_author_city_counts_df.to_csv("./output/top_ten_author_city_counts.csv")
         
-        pd.set_option('display.max_columns', None)
-        
         print(top_ten_author_tweet_counts_df)
         print("\n", "*"*80, "\n")
         print(city_tweets_df)
         print("\n", "*"*80, "\n")
-        print(top_ten_author_city_counts_df)
+        print(top_ten_author_city_counts_df.to_string())
 
         print("Process 0: Finished in {:.2f} seconds".format(time.time() - start))
 
