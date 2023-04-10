@@ -21,6 +21,19 @@ The application allows a given number of nodes and cores to be utilized. Specifi
 
 The resources are set when submitting the search application with the appropriate SLURM options.
 
+## Dataset
+bigTwitter.json
+> this is the main 18.74Gb+ JSON file to use for your final analysis and report write up, i.e., do not use the bigTwitter.json file for software development and testing.
+
+smallTwitter.json
+> smallTwitter.json this a small (242Mb) JSON file that should be used for testing
+
+tinyTwitter.json
+>tinyTwitter.json this a very small (1.5Mb) JSON file that should be used for initial testing
+
+sal.json
+>This is the file containing the suburbs, locations and Greater Capital cities of Australia.
+
 ## Usage
 To run the program locally, you can use the following command:
 ```bash
