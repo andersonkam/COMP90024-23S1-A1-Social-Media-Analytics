@@ -35,6 +35,7 @@ sal.json
 >This is the file containing the suburbs, locations and Greater Capital cities of Australia.
 
 ## Usage
+
 To run the program locally, you can use the following command:
 ```bash
 mpirun -n <number of processes> python <script name> <sal_data> <twitter_data>
@@ -46,6 +47,8 @@ sbatch slurm/1n8c.slurm      # For 1 node and 8 cores
 sbatch slurm/2n8c.slurm      # For 2 nodes and 8 cores (with 4 cores per node)
 ```
 Make sure to contain all the SLURM files in the slurm folder on SPARTAN and have all script files and data files in the root directory. The input file paths in the SLURM files should be updated based on your requirements.
+
+Note that "main.py" is the final script using 'seek' approach to execute the program. In the deprecated folder, you can find other approaches including the one using 'ijson'.
 
 
 ## **Acknowledgments**
